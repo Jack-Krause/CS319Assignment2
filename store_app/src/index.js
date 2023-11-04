@@ -21,44 +21,7 @@ function AppBody() {
             aria-labelledby="bd-theme-text"
           >
             <li>
-              <button
-                type="button"
-                className="dropdown-item d-flex align-items-center"
-                data-bs-theme-value="light"
-                aria-pressed="false"
-              >
-                <svg
-                  className="bi me-2 opacity-50 theme-icon"
-                  width="1em"
-                  height="1em"
-                >
-                  <use href="#sun-fill"></use>
-                </svg>
-                Light
-                <svg className="bi ms-auto d-none" width="1em" height="1em">
-                  <use href="#check2"></use>
-                </svg>
-              </button>
-            </li>
-            <li>
-              <button
-                type="button"
-                className="dropdown-item d-flex align-items-center"
-                data-bs-theme-value="dark"
-                aria-pressed="false"
-              >
-                <svg
-                  className="bi me-2 opacity-50 theme-icon"
-                  width="1em"
-                  height="1em"
-                >
-                  <use href="#moon-stars-fill"></use>
-                </svg>
-                Dark
-                <svg className="bi ms-auto d-none" width="1em" height="1em">
-                  <use href="#check2"></use>
-                </svg>
-              </button>
+              
             </li>
             <li>
               <button
