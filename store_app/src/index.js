@@ -12,6 +12,14 @@ function AppHeader() {
   );
 }
 
+function TestRen() {
+  return (
+    <div>
+      <h1>Test Hello There</h1>
+    </div>
+  );
+}
+
 function AppBody() {
   return (
     <div className="App">
@@ -52,12 +60,10 @@ function AppBody() {
 
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
-  <React.StrictMode>
-    <AppHeader />
-    <AppBody />
-  </React.StrictMode>
-
-);
+//   root.render(
+//   <React.StrictMode>
+//     <TestRen />
+//   </React.StrictMode>
+// );
 
 
