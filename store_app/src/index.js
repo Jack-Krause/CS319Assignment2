@@ -41,6 +41,9 @@ function InitialAppBody() {
 
   return (
     <>
+    <link href="./bootstrap.min.css" rel="stylesheet" />
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/features/" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3" />
       <div className="container">
         <header className="d-flex justify-content-center py-3">
           <span className="fs-4">Pants</span>
@@ -66,7 +69,7 @@ function InitialAppBody() {
 
       <div className="container px-4 py-5" id="custom-cards">
         <h1 className="main-title pb-2 border-bottom">Your Cart:</h1>
-        <p>Total items in cart: {cart.length}</p>
+        <p>Total Item Types in Cart: {cart.length}</p>
 
         {cart.map((cartItem, cartIndex) => (
           <div key={cartIndex}>
