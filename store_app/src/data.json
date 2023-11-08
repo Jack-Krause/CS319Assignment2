@@ -1,24 +1,32 @@
 {
     "items": [
         {
-            "title": "Slacks",
+            "title": "Cargo Pants",
             "price": 35,
-            "size": "Medium"
+            "size": "Medium",
+            "imagePath": "./images/cargopants.jpg",
+            "description": "Cargo pants are a combination of jeans and dress pants. They have lots of pockets too!"
         },
         {
-            "title": "Shorts",
-            "price": 25,
-            "size": "Small"
-        },
-        {
-            "title": "SweatPants",
-            "price": 45,
-            "size": "Extra-Large"
+            "title": "Dress Pants",
+            "price": 75,
+            "size": "Small",
+            "imagePath": "./images/dresspants.jpg",
+            "description": "Our dress pants are perfect for events where you need to look your best."
         },
         {
             "title": "Jeans",
+            "price": 45,
+            "size": "Extra-Large",
+            "imagePath": "./images/jeans.jpg",
+            "description": "Our jeans have all the comfort of sweatpants, but they look a lot better!"
+        },
+        {
+            "title": "SweatPants",
             "price": 55,
-            "size": "Medium"
+            "size": "Medium",
+            "imagePath": "./images/sweatpants.jpg",
+            "description": "Going to the gym? Class? Work? Our sweatpants can handle whatever you throw at them."
         }
     ]
 }
