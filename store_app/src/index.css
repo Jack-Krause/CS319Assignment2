@@ -87,13 +87,14 @@ code {
 }
 
 .nav-scroller {
-  position: relative;
+  /* position: relative; */
   z-index: 2;
   height: 2.75rem;
   overflow-y: hidden;
 }
 
 .nav-scroller .nav {
+  position: absolute;
   display: flex;
   flex-wrap: nowrap;
   padding-bottom: 1rem;

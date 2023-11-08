@@ -1,0 +1,24 @@
+{
+    "items": [
+        {
+            "title": "Slacks",
+            "price": 35,
+            "size": "Medium"
+        },
+        {
+            "title": "Shorts",
+            "price": 25,
+            "size": "Small"
+        },
+        {
+            "title": "SweatPants",
+            "price": 45,
+            "size": "Extra-Large"
+        },
+        {
+            "title": "Jeans",
+            "price": 55,
+            "size": "Medium"
+        }
+    ]
+}
