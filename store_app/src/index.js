@@ -5,9 +5,23 @@ import "bootstrap/dist/css/bootstrap.css";
 import data from "./data.json";
 
 
-
 function InitialAppBody() {
   const [products, setProducts] = useState([]);
+  const [cart, setCart] = useState([]);
+
+  const addToCart = (product) => {
+    const updatedCart = [...cart];
+  
+    const existingProduct = updatedCart.find((item) => item.title === product.title);
+  
+    if (existingProduct) {
+      existingProduct.quantity += 1;
+    } else {
+      updatedCart.push({...product, quantity: 1});
+    }
+  
+    setCart(updatedCart);
+  }
 
   useEffect(() => {
     setProducts(data.items);
@@ -25,25 +39,36 @@ function InitialAppBody() {
         </ul>
       </header>
     </div>
+
+    <div className="container px-4 py-5" id="custom-cards">
+  <h1 className="main-title pb-2 border-bottom">Your Cart:</h1>
+  <p>Total items in cart: {cart.length}</p>
+  {cart.map((cartItem, cartIndex) => (
+    <div key={cartIndex}>
+      <p>{cartItem.title} - Quantity: {cartItem.quantity}</p>
+    </div>
+  ))}
+</div>
     
 
   <div className="container px-4 py-5" id="custom-cards">
-    <h1 className="main-title pb-2 border-bottom">Pants Selection</h1>
+    <h1 className="main-title pb-2 border-bottom">Pants Options:</h1>
     {products.map((product, index) => (
         <div key={index}>
             <h3 className="product-title center mb-4 display-6 lh-1 fw-bold">
-              Item: {product.title}
+              {product.title}
             </h3>
             <h4 className="center">
               ${product.price}
             </h4>
             <div className="center col">
-            <img
-        className="center card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg"
-        src={product.imagePath}
-        alt={product.title}
-      />
+              <img
+                className="center card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg"
+                src={product.imagePath}
+                alt={product.title}/>
             </div>
+            <p className="pb-2 border-bottom">{product.description}</p>
+            <button onClick={() => addToCart(product)}>Add To Cart</button>
         </div>
     ))}
           
@@ -51,14 +76,6 @@ function InitialAppBody() {
 
   <div className="container px-4 py-5">
     <h2 className="secondary-title pb-2 border-bottom">Deals and More</h2>
-
-    <div className="row row-cols-1 row-cols-md-2 align-items-md-center g-5 py-5">
-      <div className="col d-flex flex-column align-items-start gap-2">
-        <h2 className="fw-bold text-body-emphasis">Check out our great deals on shirts too!</h2>
-        <p className="text-body-secondary">Nothing goes better with pants than a great shirt. Check them out while supplies last!</p>
-        <a href="./catalogTwo.html" className="btn btn-primary btn-lg">View Shirts</a>
-      </div>
-      </div>
 
       <div className="col">
         <div className="row row-cols-1 row-cols-sm-2 g-4">
