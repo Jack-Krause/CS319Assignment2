@@ -13,12 +13,120 @@ function CheckoutBody({
   setProducts,
   setFilteredProducts,
 }) {
+  const alertPlaceHolder = document.getElementById("liveAlertPlaceholder");
+  const form = document.getElementById("checkout-form");
+  const inputCard = document.querySelector("#inputCard");
+  const alertTrigger = document.getElementById("submit-btn");
+  const summaryCard = document.querySelector(".card");
+  const summaryList = document.querySelector(".card > ul");
+
   let totalPrice = 0;
 
   for (const cartItem of cart) {
     let p = cartItem.price * cartItem.quantity;
     totalPrice += p;
   }
+
+  var order = { name: '',
+    email: '',
+    card: ''
+}
+
+  const alert = (message, type) => {
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = [
+        `<div class = "alert alert-${type} alert-dismissible" role="alert">`,
+        `   <div>${message}</div>`,
+        `   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`,
+        `</div>`
+    ].join('');
+    alertPlaceHolder.append(wrapper);
+}
+
+function isNumeric(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+inputCard.addEventListener('input', event => {
+  if (!inputCard.value) {
+      return event.preventDefault();
+  } else {
+      inputCard.value = inputCard.value.replace(/-/g, '');
+      let newVal = '';
+      for (var i=0, nums=0; i < inputCard.value.length; i++) {
+          if (nums != 0 && nums % 4 == 0) {
+              newVal += '-';
+          }
+
+          newVal += inputCard.value[i];
+          if (isNumeric(inputCard.value[i])) {
+              nums++;
+          }
+      }
+      inputCard.value = newVal;
+  }
+});
+
+form.addEventListener('submit', event => {
+  if (!validate()) {
+      alertPlaceHolder.innerHTML = '';
+      alert('<i class="bi-exclamation-circle"></i> Something went wrong!', 'danger');
+  }
+      event.preventDefault();
+      event.stopPropagation();
+}, false );
+
+let validate = function(){
+  let val = true;
+  let email = document.getElementById('inputEmail4')
+  let name = document.getElementById('inputName')
+  let card = document.getElementById('inputCard')
+  
+  if (!email.value.match(
+    /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      )){
+    email.setAttribute("class", "form-control is-invalid");
+    val = false;
+  }
+  else{
+      email.setAttribute("class", "form-control is-valid");
+      order.email = email.value
+  }
+
+  if (name.value.length == 0)
+  {
+    name.setAttribute("class","form-control is-invalid")
+    val = false
+  }
+  else{
+    name.setAttribute("class", "form-control is-valid");
+    order.name = name.value
+  }
+
+  if (!card.value.match(/^[0-9]{4}\-[0-9]{4}\-[0-9]{4}\-[0-9]{4}$/))
+  {
+    card.setAttribute("class","form-control is-invalid")
+    val = false
+  }
+  else{
+    card.setAttribute("class", "form-control is-valid");
+    order.card = card.value
+  }
+
+  if (val){
+    form.classList.add("collapse")
+
+    for (const [key, value] of Object.entries(order)) {
+        summaryList.innerHTML += '<li class="list-group-item"> <b>' + `${key}` + ': </b>' + `${value}` +'</li>'
+    }
+    summaryCard.classList.remove("collapse")
+    alertPlaceHolder.innerHTML = ""
+    alert('<i class="bi-cart-check-fill"></i> You have made an order!', 'success')
+  }
+  return val;
+}
+
+
 
   return (
     <>
@@ -63,71 +171,163 @@ function CheckoutBody({
             <strong>Price</strong>
           </div>
 
-
-        {cart.map((cartItem, cartIndex) => (
-          <div key={cartIndex} className="row align-items-center">
-            <div className="col-md-3">
-              <img
-                style={{ width: "100px", height: "100px" }}
-                className="card-img-top"
-                src={cartItem.imagePath}
-                alt={cartItem.title}
-              />
+          {cart.map((cartItem, cartIndex) => (
+            <div key={cartIndex} className="row align-items-center">
+              <div className="col-md-3">
+                <img
+                  style={{ width: "100px", height: "100px" }}
+                  className="card-img-top"
+                  src={cartItem.imagePath}
+                  alt={cartItem.title}
+                />
+              </div>
+              <div className="col-md-3">
+                <h5>{cartItem.title}</h5>
+              </div>
+              <div className="col-md-3">
+                <p>Quantity: {cartItem.quantity}</p>
+              </div>
+              <div className="col-md-3">
+                <p>${cartItem.quantity * cartItem.price}.00</p>
+              </div>
+              <p className="pb-2">Total: ${totalPrice}</p>
             </div>
-            <div className="col-md-3">
-              <h5>{cartItem.title}</h5>
-            </div>
-            <div className="col-md-3">
-              <p>Quantity: {cartItem.quantity}</p>
-            </div>
-            <div className="col-md-3">
-              <p>${cartItem.quantity * cartItem.price}.00</p>
-            </div>
-            <p className="pb-2">Total: ${totalPrice}</p>
-          </div>
-        ))}
+          ))}
         </div>
       </div>
-      <div className="container px-4 py-5">
-        <h2 className="secondary-title pb-2 border-bottom">Payment Information</h2>
+      <div className="container">
+        <div className="row">
+          <div className="col-2"></div>
 
-        <div className="col">
-          <div className="row row-cols-1 row-cols-sm-2 g-4">
-            <div className="col d-flex flex-column gap-2">
-              <div className="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3"></div>
-              <h4 className="deal-title fw-semibold mb-0">Full Name</h4>
-              <form className="text-body-secondary">
-                <input type="text" name="userName">
+          <div className="col-8">
+            <h1>Payment Information</h1>
+
+            <div id="liveAlertPlaceholder"></div>
+
+            <form className="row g-3" id="checkout-form">
+              {/* Name */}
+              <div className="col-md-6">
+                <label className="form-label">
+                  Full Name
+                </label>
+                <input type="text" className="form-control" id="inputName">
                 </input>
-              </form>
-            </div>
+                <div className="valid-feedback">Looks good!</div>
+                <div className="invalid-feedback">Must be like, "John Doe"</div>
+              </div>
 
-            <div className="col d-flex flex-column gap-2">
-              <div className="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3"></div>
-              <h4 className="deal-title fw-semibold mb-0">Email</h4>
-              <form className="text-body-secondary">
-                <input type="text" name="userName">
+              {/* Email */}
+              <div className="col-md-6">
+                <label className="form-label">
+                  Email
+                </label>
+                <input type="email" className="form-control" id="inputEmail4">
                 </input>
-              </form>
-            </div>
+                <div className="valid-feedback">Looks good!</div>
+                <div className="invalid-feedback">
+                  Must be like, "abc@xyz.efg"
+                </div>
+              </div>
 
-            <div className="col d-flex flex-column gap-2">
-              <div className="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3"></div>
-              <h4 className="deal-title fw-semibold mb-0">Card</h4>
-              <p className="text-body-secondary">
-                Free shipping is included on all orders over $100.
-              </p>
-            </div>
-          </div>
+              {/* Credit card */}
+              <div className="col-12">
+                <label className="form-label">
+                  Card
+                </label>
+                <div className="input-group mb-3">
+                  <span className="input-group-text" id="basic-addon1">
+                    <i className="bi-credit-card-fill"></i>
+                  </span>
+                  <input
+                    type="text"
+                    id="inputCard"
+                    className="form-control"
+                    placeholder="XXXX-XXXX-XXXX-XXXX"
+                    aria-label="Username"
+                    aria-describedby="basic-addon1"
+                  >
+                  </input>
+                  <div className="valid-feedback">Looks good!</div>
+                  <div className="invalid-feedback">
+                    Must be like, "7777-7777-7777-7777"
+                  </div>
+                </div>
+              </div>
 
-          <div className="col d-flex flex-column gap-2">
-            <div className="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3"></div>
-            <h4 className="deal-title fw-semibold mb-0">
-              Satisfaction Guaranteed
-            </h4>
-            <p className="text-body-secondary">
-              Not happy with your order? We accept all returns within 30 days.
-            </p>
+              <div className="col-12">
+                <label className="form-label">
+                  Address
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="inputAddress"
+                  placeholder="1234 Main St"
+                ></input>
+              </div>
+              <div className="col-12">
+                <label className="form-label">
+                  Address 2
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="inputAddress2"
+                  placeholder="Apartment, studio, or floor"
+                ></input>
+              </div>
+              <div className="col-md-6">
+                <label className="form-label">
+                  City
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="inputCity"
+                ></input>
+              </div>
+              <div className="col-md-4">
+                <label className="form-label">
+                  State
+                </label>
+                <select id="inputState" className="form-select">
+                  <option selected>Choose...</option>
+                  <option>...</option>
+                </select>
+              </div>
+              <div className="col-md-2">
+                <label className="form-label">
+                  Zip
+                </label>
+                <input type="text" className="form-control" id="inputZip">
+                </input>
+              </div>
+              <div className="col-12">
+                <div className="form-check">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    id="gridCheck"
+                  ></input>
+                  <label className="form-check-label">
+                    Check me out
+                  </label>
+                </div>
+              </div>
+              <div className="col-12">
+                <button type="submit" id="submit-btn" className="btn btn-success">
+                  <i className="bi-bag-check"></i> Order
+                </button>
+              </div>
+            </form>
+
+            <div className="card collapse">
+              <div className="card-body">
+                <h5 className="card-title">Order summary</h5>
+                <p className="card-text">Here is a summary of your order.</p>
+              </div>
+              <ul className="list-group list-group-flush"></ul>
+            </div>
           </div>
         </div>
       </div>
