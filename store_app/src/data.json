@@ -1,24 +1,28 @@
 {
     "items": [
         {
-            "title": "Slacks",
+            "title": "Cargo Pants",
             "price": 35,
-            "size": "Medium"
+            "size": "Medium",
+            "imagePath": "./images/cargopants.jpg"
         },
         {
-            "title": "Shorts",
-            "price": 25,
-            "size": "Small"
-        },
-        {
-            "title": "SweatPants",
-            "price": 45,
-            "size": "Extra-Large"
+            "title": "Dress Pants",
+            "price": 75,
+            "size": "Small",
+            "imagePath": "./images/dresspants.jpg"
         },
         {
             "title": "Jeans",
+            "price": 45,
+            "size": "Extra-Large",
+            "imagePath": "./images/jeans.jpg"
+        },
+        {
+            "title": "SweatPants",
             "price": 55,
-            "size": "Medium"
+            "size": "Medium",
+            "imagePath": "./images/sweatpants.jpg"
         }
     ]
 }
