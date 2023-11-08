@@ -6,8 +6,8 @@ import "bootstrap/dist/css/bootstrap.css";
 function AppHeader() {
   return (
     <>
-      <header data-bs-theme="dark">
-        <nav className="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+      <header data-bs-theme="dark nav">
+        <nav className="nav navbar navbar-expand-md navbar-dark fixed-top bg-dark">
           <div className="container-fluid">
             <h1 className="navbar-brand">Home</h1>
             <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
@@ -34,7 +34,7 @@ function InitialAppBody() {
 <div className="container marketing">
 
 {/* Three columns of text below the carousel */}
-<div className="row">
+<div className="row nav">
   <div className="col-lg-4">
     <h2 className="fw-normal">Featured: Is Jaws Real?</h2>
     <p>Believe it or not, Jaws is actually based on a true story. The movie roughly follows the events of the

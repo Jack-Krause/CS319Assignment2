@@ -94,6 +94,7 @@ code {
 }
 
 .nav-scroller .nav {
+  position: absolute;
   display: flex;
   flex-wrap: nowrap;
   padding-bottom: 1rem;
