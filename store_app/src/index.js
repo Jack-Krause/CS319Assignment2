@@ -62,7 +62,7 @@ function CheckoutBody({
           <div className="col-md-3">
             <strong>Price</strong>
           </div>
-        </div>
+
 
         {cart.map((cartItem, cartIndex) => (
           <div key={cartIndex} className="row align-items-center">
@@ -84,16 +84,52 @@ function CheckoutBody({
               <p>${cartItem.quantity * cartItem.price}.00</p>
             </div>
             <p className="pb-2">Total: ${totalPrice}</p>
-
-            <button
-              onClick={() => {
-                setIsCheckoutPage(false);
-              }}
-            >
-              Back to Products
-            </button>
           </div>
         ))}
+        </div>
+      </div>
+      <div className="container px-4 py-5">
+        <h2 className="secondary-title pb-2 border-bottom">Payment Information</h2>
+
+        <div className="col">
+          <div className="row row-cols-1 row-cols-sm-2 g-4">
+            <div className="col d-flex flex-column gap-2">
+              <div className="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3"></div>
+              <h4 className="deal-title fw-semibold mb-0">Full Name</h4>
+              <form className="text-body-secondary">
+                <input type="text" name="userName">
+                </input>
+              </form>
+            </div>
+
+            <div className="col d-flex flex-column gap-2">
+              <div className="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3"></div>
+              <h4 className="deal-title fw-semibold mb-0">Email</h4>
+              <form className="text-body-secondary">
+                <input type="text" name="userName">
+                </input>
+              </form>
+            </div>
+
+            <div className="col d-flex flex-column gap-2">
+              <div className="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3"></div>
+              <h4 className="deal-title fw-semibold mb-0">Card</h4>
+              <p className="text-body-secondary">
+                Free shipping is included on all orders over $100.
+              </p>
+            </div>
+          </div>
+
+          <div className="col d-flex flex-column gap-2">
+            <div className="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3"></div>
+            <h4 className="deal-title fw-semibold mb-0">
+              Satisfaction Guaranteed
+            </h4>
+            <p className="text-body-secondary">
+              Not happy with your order? We accept all returns within 30 days.
+            </p>
+          </div>
+        </div>
       </div>
     </>
   );
