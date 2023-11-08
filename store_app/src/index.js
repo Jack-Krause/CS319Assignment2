@@ -4,11 +4,77 @@ import "./index.css";
 import "bootstrap/dist/css/bootstrap.css";
 import data from "./data.json";
 
-function InitialAppBody() {
-  const [products, setProducts] = useState([]);
-  const [cart, setCart] = useState([]);
+
+function ConfirmationBody({ setIsConfirmationPage, cart, products, filteredProducts, setCart, setProducts, setFilteredProducts}) {
+  let totalPrice = 0;
+
+  for (const cartItem of cart) {
+    let p = cartItem.price * cartItem.quantity;
+    totalPrice += p;
+  }
+
+
+  return (
+    <>
+      <link href="./bootstrap.min.css" rel="stylesheet" />
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/features/" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3" />
+      <div className="container">
+        <header className="d-flex justify-content-center py-3">
+          <span className="fs-4">Pants</span>
+          <ul className="nav nav-pills">
+            <li className="nav-item">
+              <a href="#" className="nav-link active" aria-current="page">
+                Home
+              </a>
+            </li>
+            <li className="nav-item">
+              <a href="./catalogTwo.html" className="nav-link">
+                Other Items
+              </a>
+            </li>
+            <li className="nav-item">
+              <a href="./about.html" className="nav-link">
+                About
+              </a>
+            </li>
+          </ul>
+        </header>
+      </div>
+
+      <div className="container px-4 py-5" id="custom-cards">
+        <h1 className="main-title pb-2 border-bottom">Your Cart:</h1>
+        <p>Total Item Types in Cart: {cart.length}</p>
+        <p>Total price of cart: ${totalPrice}</p>
+
+        {cart.map((cartItem, cartIndex) => (
+          <div key={cartIndex}>
+            
+            <p>
+              {cartItem.title} - Quantity: {cartItem.quantity}
+            </p>
+            <img
+                    className="center card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg"
+                    src={cartItem.imagePath}
+                    alt={cartItem.title}
+                  />
+          </div>
+        ))}
+      
+      <button
+        onClick={() => {
+          setIsConfirmationPage(false);
+        }}
+      >
+        Back to Cart
+      </button>
+      </div>
+    </>
+  );
+}
+
+function InitialAppBody( {setIsConfirmationPage, cart, products, filteredProducts, setCart, setProducts, setFilteredProducts} ) {
   const [userInput, setUserInput] = useState("");
-  const [filteredProducts, setFilteredProducts] = useState([]);
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
@@ -78,6 +144,15 @@ function InitialAppBody() {
             </p>
           </div>
         ))}
+        <button className="nav-item"
+          onClick={() => {
+            if (cart.length > 0) {
+              setIsConfirmationPage(true);
+            } else {
+              alert("You cannot checkout, the cart is empty!");
+            }
+          }}
+        >Checkout</button>
       </div>
 
       <div className="container px-4 py-5" id="custom-cards">
@@ -211,12 +286,38 @@ function InitialAppBody() {
 }
 
 function Initial() {
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [isConfirmationPage, setIsConfirmationPage] = useState(false);
+  const [products, setProducts] = useState([]);
+  const [cart, setCart] = useState([]);
+
   return (
     <>
-      <InitialAppBody />
+      {isConfirmationPage ? (
+        <ConfirmationBody 
+        setIsConfirmationPage={setIsConfirmationPage}
+        cart={cart}
+        products={products}
+        filteredProducts={filteredProducts} 
+        setCart={setCart}
+        setProducts={setProducts}
+        setFilteredProducts={setFilteredProducts}
+        />
+      ) : (
+        <InitialAppBody 
+        setIsConfirmationPage={setIsConfirmationPage}
+        cart={cart}
+        products={products}
+        filteredProducts={filteredProducts} 
+        setCart={setCart}
+        setProducts={setProducts}
+        setFilteredProducts={setFilteredProducts}
+        />
+      )}
     </>
   );
 }
+
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
