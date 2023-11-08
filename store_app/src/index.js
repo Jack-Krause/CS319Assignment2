@@ -4,8 +4,15 @@ import "./index.css";
 import "bootstrap/dist/css/bootstrap.css";
 import data from "./data.json";
 
-
-function ConfirmationBody({ setIsConfirmationPage, cart, products, filteredProducts, setCart, setProducts, setFilteredProducts}) {
+function CheckoutBody({
+  setIsCheckoutPage,
+  cart,
+  products,
+  filteredProducts,
+  setCart,
+  setProducts,
+  setFilteredProducts,
+}) {
   let totalPrice = 0;
 
   for (const cartItem of cart) {
@@ -13,12 +20,8 @@ function ConfirmationBody({ setIsConfirmationPage, cart, products, filteredProdu
     totalPrice += p;
   }
 
-
   return (
     <>
-      <link href="./bootstrap.min.css" rel="stylesheet" />
-    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/features/" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3" />
       <div className="container">
         <header className="d-flex justify-content-center py-3">
           <span className="fs-4">Pants</span>
@@ -44,36 +47,67 @@ function ConfirmationBody({ setIsConfirmationPage, cart, products, filteredProdu
 
       <div className="container px-4 py-5" id="custom-cards">
         <h1 className="main-title pb-2 border-bottom">Your Cart:</h1>
-        <p>Total Item Types in Cart: {cart.length}</p>
-        <p>Total price of cart: ${totalPrice}</p>
+        <p className="pb-2">Total Item Types in Cart: {cart.length}</p>
+
+        <div className="row">
+          <div className="col-md-3">
+            <strong>Image</strong>
+          </div>
+          <div className="col-md-3">
+            <strong>Title</strong>
+          </div>
+          <div className="col-md-3">
+            <strong>Quantity</strong>
+          </div>
+          <div className="col-md-3">
+            <strong>Price</strong>
+          </div>
+        </div>
 
         {cart.map((cartItem, cartIndex) => (
-          <div key={cartIndex}>
-            
-            <p>
-              {cartItem.title} - Quantity: {cartItem.quantity}
-            </p>
-            <img
-                    className="center card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg"
-                    src={cartItem.imagePath}
-                    alt={cartItem.title}
-                  />
+          <div key={cartIndex} className="row align-items-center">
+            <div className="col-md-3">
+              <img
+                style={{ width: "100px", height: "100px" }}
+                className="card-img-top"
+                src={cartItem.imagePath}
+                alt={cartItem.title}
+              />
+            </div>
+            <div className="col-md-3">
+              <h5>{cartItem.title}</h5>
+            </div>
+            <div className="col-md-3">
+              <p>Quantity: {cartItem.quantity}</p>
+            </div>
+            <div className="col-md-3">
+              <p>${cartItem.quantity * cartItem.price}.00</p>
+            </div>
+            <p className="pb-2">Total: ${totalPrice}</p>
+
+            <button
+              onClick={() => {
+                setIsCheckoutPage(false);
+              }}
+            >
+              Back to Products
+            </button>
           </div>
         ))}
-      
-      <button
-        onClick={() => {
-          setIsConfirmationPage(false);
-        }}
-      >
-        Back to Cart
-      </button>
       </div>
     </>
   );
 }
 
-function InitialAppBody( {setIsConfirmationPage, cart, products, filteredProducts, setCart, setProducts, setFilteredProducts} ) {
+function InitialAppBody({
+  setIsCheckoutPage,
+  cart,
+  products,
+  filteredProducts,
+  setCart,
+  setProducts,
+  setFilteredProducts,
+}) {
   const [userInput, setUserInput] = useState("");
 
   const handleFormSubmit = (event) => {
@@ -107,9 +141,15 @@ function InitialAppBody( {setIsConfirmationPage, cart, products, filteredProduct
 
   return (
     <>
-    <link href="./bootstrap.min.css" rel="stylesheet" />
-    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/features/" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3" />
+      <link href="./bootstrap.min.css" rel="stylesheet" />
+      <link
+        rel="canonical"
+        href="https://getbootstrap.com/docs/5.3/examples/features/"
+      />
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@docsearch/css@3"
+      />
       <div className="container">
         <header className="d-flex justify-content-center py-3">
           <span className="fs-4">Pants</span>
@@ -135,7 +175,7 @@ function InitialAppBody( {setIsConfirmationPage, cart, products, filteredProduct
 
       <div className="container px-4 py-5" id="custom-cards">
         <h1 className="main-title pb-2 border-bottom">Your Cart:</h1>
-        <p>Total Item Types in Cart: {cart.length}</p>
+        <p className="pb-2">Total Item Types in Cart: {cart.length}</p>
 
         {cart.map((cartItem, cartIndex) => (
           <div key={cartIndex}>
@@ -144,29 +184,32 @@ function InitialAppBody( {setIsConfirmationPage, cart, products, filteredProduct
             </p>
           </div>
         ))}
-        <button className="nav-item"
+        <button
+          className="nav-item"
           onClick={() => {
             if (cart.length > 0) {
-              setIsConfirmationPage(true);
+              setIsCheckoutPage(true);
             } else {
               alert("You cannot checkout, the cart is empty!");
             }
           }}
-        >Checkout</button>
+        >
+          Checkout
+        </button>
       </div>
 
       <div className="container px-4 py-5" id="custom-cards">
         <h1 className="main-title pb-2 border-bottom">Pants Options:</h1>
         <form onSubmit={handleFormSubmit}>
           <label>
-            Search our Products: 
+            Search our Products:
             <input
               type="text"
               name="userInput"
               value={userInput}
               onChange={(e) => setUserInput(e.target.value)}
             />
-            <input type="submit" value = "Search" />
+            <input type="submit" value="Search" />
           </label>
         </form>
 
@@ -287,37 +330,36 @@ function InitialAppBody( {setIsConfirmationPage, cart, products, filteredProduct
 
 function Initial() {
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [isConfirmationPage, setIsConfirmationPage] = useState(false);
+  const [isCheckoutPage, setIsCheckoutPage] = useState(false);
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
 
   return (
     <>
-      {isConfirmationPage ? (
-        <ConfirmationBody 
-        setIsConfirmationPage={setIsConfirmationPage}
-        cart={cart}
-        products={products}
-        filteredProducts={filteredProducts} 
-        setCart={setCart}
-        setProducts={setProducts}
-        setFilteredProducts={setFilteredProducts}
+      {isCheckoutPage ? (
+        <CheckoutBody
+          setIsCheckoutPage={setIsCheckoutPage}
+          cart={cart}
+          products={products}
+          filteredProducts={filteredProducts}
+          setCart={setCart}
+          setProducts={setProducts}
+          setFilteredProducts={setFilteredProducts}
         />
       ) : (
-        <InitialAppBody 
-        setIsConfirmationPage={setIsConfirmationPage}
-        cart={cart}
-        products={products}
-        filteredProducts={filteredProducts} 
-        setCart={setCart}
-        setProducts={setProducts}
-        setFilteredProducts={setFilteredProducts}
+        <InitialAppBody
+          setIsCheckoutPage={setIsCheckoutPage}
+          cart={cart}
+          products={products}
+          filteredProducts={filteredProducts}
+          setCart={setCart}
+          setProducts={setProducts}
+          setFilteredProducts={setFilteredProducts}
         />
       )}
     </>
   );
 }
-
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
