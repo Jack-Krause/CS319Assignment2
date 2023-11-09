@@ -381,11 +381,13 @@ function InitialAppBody({
 
   return (
     <>
+      <link href="./index.css" rel="stylesheet" />
       <link href="./bootstrap.min.css" rel="stylesheet" />
       <link
         rel="canonical"
         href="https://getbootstrap.com/docs/5.3/examples/features/"
       />
+      
       <link
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/@docsearch/css@3"
@@ -423,7 +425,8 @@ function InitialAppBody({
 
       <div className="container px-4 py-5" id="custom-cards">
         <h1 className="main-title pb-2 border-bottom">Pants Options:</h1>
-        <form onSubmit={handleFormSubmit}>
+        <form className="spaced"
+         onSubmit={handleFormSubmit}>
           <label>
             Search our Products:
             <input
@@ -440,7 +443,7 @@ function InitialAppBody({
           ? filteredProducts.map((product, index) => (
               // Render filtered products here
               <div key={index}>
-                <h3 className="product-title center mb-4 display-6 lh-1 fw-bold">
+                <h3 className="product-title center mb-4 display-6 lh-1 fw-bold spaced">
                   {product.title}
                 </h3>
                 <h4 className="center">${product.price}</h4>
@@ -451,8 +454,9 @@ function InitialAppBody({
                     alt={product.title}
                   />
                 </div>
-                <p className="pb-2 border-bottom">{product.description}</p>
-                <button onClick={() => addToCart(product)}>Add To Cart</button>
+                <p className="spaced pb-2 border-bottom">{product.description}</p>
+                <button className="spaced" 
+                onClick={() => addToCart(product)}>Add To Cart</button>
               </div>
             ))
           : products.map((product, index) => (
