@@ -69,6 +69,14 @@ function ConfirmationBody({
             </div>
           ))}
           <p className="pb-2">Total: ${totalSpent}</p>
+          <p className="pb-2">Charged to card ending with: {userCardNum}</p>
+          <button className="nav-item"
+          onClick={() => {
+            setIsCheckedOut(false);
+            setCart([]);
+          }}>
+            Make another purchase
+          </button>
         </div>
       </div>
     </>
@@ -164,10 +172,11 @@ function CheckoutBody({
 
     if (Object.keys(validationErrors).length === 0) {
       // Validation passed, proceed with the order
-      setUserCardNum(order.card.substring(11, 16));
+      setUserCardNum(order.card.substring(12, 16));
       setUserName(order.name);
       alert("Order submitted successfully!"); // Replace with your desired action
       setFormErrors({});
+      setIsCheckoutPage(false);
       setIsCheckedOut(true);
     } else {
       // Validation failed, update the formErrors state
@@ -185,6 +194,12 @@ function CheckoutBody({
       </div>
 
       <div className="container px-4 py-5" id="custom-cards">
+        <button className="nav-item"
+        onClick={() => {
+          setIsCheckoutPage(false);
+        }}>
+        Return to products
+        </button>
         <h1 className="main-title pb-2 border-bottom">Your Cart:</h1>
         <p className="pb-2">Total Item Types in Cart: {cart.length}</p>
 
