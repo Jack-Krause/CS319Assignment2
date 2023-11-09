@@ -13,13 +13,7 @@ function CheckoutBody({
   setProducts,
   setFilteredProducts,
 }) {
-  const alertPlaceHolder = document.getElementById("liveAlertPlaceholder");
-  const form = document.getElementById("checkout-form");
-  const inputCard = document.querySelector("#inputCard");
-  const alertTrigger = document.getElementById("submit-btn");
-  const summaryCard = document.querySelector(".card");
-  const summaryList = document.querySelector(".card > ul");
-
+  const [alertMessage, setAlertMessage] = useState(null);
   let totalPrice = 0;
 
   for (const cartItem of cart) {
@@ -27,129 +21,81 @@ function CheckoutBody({
     totalPrice += p;
   }
 
-  var order = { name: '',
-    email: '',
-    card: ''
-}
+  const [order, setOrder] = useState({
+    name: "",
+    email: "",
+    card: "",
+  });
 
-  const alert = (message, type) => {
-    const wrapper = document.createElement('div');
-    wrapper.innerHTML = [
-        `<div class = "alert alert-${type} alert-dismissible" role="alert">`,
-        `   <div>${message}</div>`,
-        `   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`,
-        `</div>`
-    ].join('');
-    alertPlaceHolder.append(wrapper);
-}
+  const [formErrors, setFormErrors] = useState({
+    email: "",
+    name: "",
+    card: "",
+  });
 
-function isNumeric(n) {
-  return !isNaN(parseFloat(n)) && isFinite(n);
-}
+  const [formattedCard, setFormattedCard] = useState("");
 
-inputCard.addEventListener('input', event => {
-  if (!inputCard.value) {
-      return event.preventDefault();
-  } else {
-      inputCard.value = inputCard.value.replace(/-/g, '');
-      let newVal = '';
-      for (var i=0, nums=0; i < inputCard.value.length; i++) {
-          if (nums != 0 && nums % 4 == 0) {
-              newVal += '-';
-          }
+  const handleInputChange = (event) => {
+    const { id, value } = event.target;
 
-          newVal += inputCard.value[i];
-          if (isNumeric(inputCard.value[i])) {
-              nums++;
-          }
-      }
-      inputCard.value = newVal;
-  }
-});
+  if (id === "card") {
+    // Remove any non-numeric characters from the input
+    const numericValue = value.replace(/\D/g, "");
 
-form.addEventListener('submit', event => {
-  if (!validate()) {
-      alertPlaceHolder.innerHTML = '';
-      alert('<i class="bi-exclamation-circle"></i> Something went wrong!', 'danger');
-  }
-      event.preventDefault();
-      event.stopPropagation();
-}, false );
+    // Format the card number with hyphens every 4 digits
+    const formattedValue = numericValue
+      .match(/\d{1,4}/g)
+      .join("-")
+      .substr(0, 19); // Limit to 19 characters
 
-let validate = function(){
-  let val = true;
-  let email = document.getElementById('inputEmail4')
-  let name = document.getElementById('inputName')
-  let card = document.getElementById('inputCard')
-  
-  if (!email.value.match(
-    /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      )){
-    email.setAttribute("class", "form-control is-invalid");
-    val = false;
-  }
-  else{
-      email.setAttribute("class", "form-control is-valid");
-      order.email = email.value
-  }
+    // Update the state with the formatted card number and the original value
+    setFormattedCard(formattedValue);
+    setOrder({ ...order, [id]: numericValue });
 
-  if (name.value.length == 0)
-  {
-    name.setAttribute("class","form-control is-invalid")
-    val = false
-  }
-  else{
-    name.setAttribute("class", "form-control is-valid");
-    order.name = name.value
-  }
-
-  if (!card.value.match(/^[0-9]{4}\-[0-9]{4}\-[0-9]{4}\-[0-9]{4}$/))
-  {
-    card.setAttribute("class","form-control is-invalid")
-    val = false
-  }
-  else{
-    card.setAttribute("class", "form-control is-valid");
-    order.card = card.value
-  }
-
-  if (val){
-    form.classList.add("collapse")
-
-    for (const [key, value] of Object.entries(order)) {
-        summaryList.innerHTML += '<li class="list-group-item"> <b>' + `${key}` + ': </b>' + `${value}` +'</li>'
+    // Check if the numericValue is 16 digits
+    if (numericValue.length !== 16) {
+      setFormErrors({ ...formErrors, [id]: "Card number must have 16 digits" });
+    } else {
+      setFormErrors({ ...formErrors, [id]: "" });
     }
-    summaryCard.classList.remove("collapse")
-    alertPlaceHolder.innerHTML = ""
-    alert('<i class="bi-cart-check-fill"></i> You have made an order!', 'success')
+  } else {
+    // Handle other form fields
+    setOrder({ ...order, [id]: value });
   }
-  return val;
-}
+};
 
+  const handleSubmit = (event) => {
+    event.preventDefault();
 
+    // Perform form validation here
+    const validationErrors = {};
+    if (
+      !order.email.match(
+        /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zAZ]{2,}))$/
+      )
+    ) {
+      validationErrors.email = "Invalid email address";
+    }
+    if (!order.name) {
+      validationErrors.name = "Name is required";
+    }
+    
+
+    if (Object.keys(validationErrors).length === 0) {
+      // Validation passed, proceed with the order
+      alert("Order submitted successfully!"); // Replace with your desired action
+      setFormErrors({});
+    } else {
+      // Validation failed, update the formErrors state
+      setFormErrors(validationErrors);
+    }
+  };
 
   return (
     <>
       <div className="container">
         <header className="d-flex justify-content-center py-3">
           <span className="fs-4">Pants</span>
-          <ul className="nav nav-pills">
-            <li className="nav-item">
-              <a href="#" className="nav-link active" aria-current="page">
-                Home
-              </a>
-            </li>
-            <li className="nav-item">
-              <a href="./catalogTwo.html" className="nav-link">
-                Other Items
-              </a>
-            </li>
-            <li className="nav-item">
-              <a href="./about.html" className="nav-link">
-                About
-              </a>
-            </li>
-          </ul>
         </header>
       </div>
 
@@ -204,118 +150,74 @@ let validate = function(){
 
             <div id="liveAlertPlaceholder"></div>
 
-            <form className="row g-3" id="checkout-form">
+            <form
+              className="row g-3"
+              id="checkout-form"
+              onSubmit={handleSubmit}
+            >
               {/* Name */}
               <div className="col-md-6">
-                <label className="form-label">
-                  Full Name
-                </label>
-                <input type="text" className="form-control" id="inputName">
-                </input>
-                <div className="valid-feedback">Looks good!</div>
-                <div className="invalid-feedback">Must be like, "John Doe"</div>
+                <label className="form-label">Full Name</label>
+                <input
+                  type="text"
+                  className={`form-control ${
+                    formErrors.name ? "is-invalid" : ""
+                  }`}
+                  id="name"
+                  value={order.name}
+                  onChange={handleInputChange}
+                />
+                {formErrors.name && (
+                  <div className="invalid-feedback">{formErrors.name}</div>
+                )}
               </div>
 
               {/* Email */}
               <div className="col-md-6">
-                <label className="form-label">
-                  Email
-                </label>
-                <input type="email" className="form-control" id="inputEmail4">
-                </input>
-                <div className="valid-feedback">Looks good!</div>
-                <div className="invalid-feedback">
-                  Must be like, "abc@xyz.efg"
-                </div>
+                <label className="form-label">Email</label>
+                <input
+                  type="email"
+                  className={`form-control ${
+                    formErrors.email ? "is-invalid" : ""
+                  }`}
+                  id="email"
+                  value={order.email}
+                  onChange={handleInputChange}
+                />
+                {formErrors.email && (
+                  <div className="invalid-feedback">{formErrors.email}</div>
+                )}
               </div>
 
               {/* Credit card */}
               <div className="col-12">
-                <label className="form-label">
-                  Card
-                </label>
-                <div className="input-group mb-3">
-                  <span className="input-group-text" id="basic-addon1">
-                    <i className="bi-credit-card-fill"></i>
-                  </span>
-                  <input
-                    type="text"
-                    id="inputCard"
-                    className="form-control"
-                    placeholder="XXXX-XXXX-XXXX-XXXX"
-                    aria-label="Username"
-                    aria-describedby="basic-addon1"
-                  >
-                  </input>
-                  <div className="valid-feedback">Looks good!</div>
-                  <div className="invalid-feedback">
-                    Must be like, "7777-7777-7777-7777"
-                  </div>
-                </div>
-              </div>
+  <label className="form-label">Card</label>
+  <div className="input-group mb-3">
+    <span className="input-group-text" id="basic-addon1">
+      <i className="bi-credit-card-fill"></i>
+    </span>
+    <input
+      type="tel"
+      className={`form-control ${formErrors.card ? "is-invalid" : ""}`}
+      id="card"
+      placeholder="XXXX-XXXX-XXXX-XXXX"
+      value={formattedCard}
+      onChange={handleInputChange}
+    />
+    {formErrors.card && (
+      <div className="invalid-feedback">{formErrors.card}</div>
+    )}
+  </div>
+</div>
+
+              {/* ... other form fields ... */}
 
               <div className="col-12">
-                <label className="form-label">
-                  Address
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="inputAddress"
-                  placeholder="1234 Main St"
-                ></input>
-              </div>
-              <div className="col-12">
-                <label className="form-label">
-                  Address 2
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="inputAddress2"
-                  placeholder="Apartment, studio, or floor"
-                ></input>
-              </div>
-              <div className="col-md-6">
-                <label className="form-label">
-                  City
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="inputCity"
-                ></input>
-              </div>
-              <div className="col-md-4">
-                <label className="form-label">
-                  State
-                </label>
-                <select id="inputState" className="form-select">
-                  <option selected>Choose...</option>
-                  <option>...</option>
-                </select>
-              </div>
-              <div className="col-md-2">
-                <label className="form-label">
-                  Zip
-                </label>
-                <input type="text" className="form-control" id="inputZip">
-                </input>
-              </div>
-              <div className="col-12">
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    id="gridCheck"
-                  ></input>
-                  <label className="form-check-label">
-                    Check me out
-                  </label>
-                </div>
-              </div>
-              <div className="col-12">
-                <button type="submit" id="submit-btn" className="btn btn-success">
+                <button
+                  type="submit"
+                  id="submit-btn"
+                  className="btn btn-success"
+                >
                   <i className="bi-bag-check"></i> Order
                 </button>
               </div>
@@ -389,23 +291,7 @@ function InitialAppBody({
       <div className="container">
         <header className="d-flex justify-content-center py-3">
           <span className="fs-4">Pants</span>
-          <ul className="nav nav-pills">
-            <li className="nav-item">
-              <a href="#" className="nav-link active" aria-current="page">
-                Home
-              </a>
-            </li>
-            <li className="nav-item">
-              <a href="./catalogTwo.html" className="nav-link">
-                Other Items
-              </a>
-            </li>
-            <li className="nav-item">
-              <a href="./about.html" className="nav-link">
-                About
-              </a>
-            </li>
-          </ul>
+        
         </header>
       </div>
 
